@@ -12,7 +12,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class projektKoncowy {
     static WebDriver driver = new ChromeDriver();
-
+//komentarz
     @BeforeAll
     static void prepareBrowser() {
         driver.manage().window().maximize();
