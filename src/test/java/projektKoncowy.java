@@ -12,7 +12,6 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class projektKoncowy {
     static WebDriver driver = new ChromeDriver();
-//komentarz
     @BeforeAll
     static void prepareBrowser() {
         driver.manage().window().maximize();
@@ -33,10 +32,10 @@ public class projektKoncowy {
     //Zad 8.* (zadanie dodatkowe)
     //Zrefaktoruj logowanie. Utwórz metodę pomocniczą login(), która przymuje dwa parametry: login i hasło.
     //Użyj jej w teście sprawdzającym logowanie.
-    void logIn(String login, String haslo) {
+    void logIn(String login, String password) {
         driver.findElement(By.className("login")).click();
         driver.findElement(By.id("email")).sendKeys(login);
-        driver.findElement(By.id("passwd")).sendKeys(haslo);
+        driver.findElement(By.id("passwd")).sendKeys(password);
         driver.findElement(By.id("SubmitLogin")).click();
     }
 
@@ -64,14 +63,14 @@ public class projektKoncowy {
     //Sprawdź, czy strona główna oraz strona logowania zawiera logo i pole wyszukiwania.
     @Test
     void doesThePageContainLogoAndSearchField() {
-        String zrodlo = driver.findElement(By.cssSelector("#header_logo > a > img")).getAttribute("src");
-        Assertions.assertTrue(zrodlo.contains("logo.jpg"), "naStronieGlownejNieZnalezionoPlikuLogoJpg");
-        int liczbaPolWyszukiwania = driver.findElements(By.id("search_query_top")).size();
-        Assertions.assertTrue(liczbaPolWyszukiwania >= 1, "naStronieGlownejNieZnalezionoPolaWyszukiwania");
+        String source = driver.findElement(By.cssSelector("#header_logo > a > img")).getAttribute("src");
+        Assertions.assertTrue(source.contains("logo.jpg"), "naStronieGlownejNieZnalezionoPlikuLogoJpg");
+        int noOfSearchFields = driver.findElements(By.id("search_query_top")).size();
+        Assertions.assertTrue(noOfSearchFields >= 1, "naStronieGlownejNieZnalezionoPolaWyszukiwania");
         driver.findElement(By.className("login")).click();
         Assertions.assertTrue(driver.findElement(By.cssSelector("#header_logo > a > img")).getAttribute("src").contains("logo.jpg"), "naStronieLogowaniaNieZnalezionoPlikuLogoJpg");
-        int liczbaPolWyszukiwania2 = driver.findElements(By.id("search_query_top")).size();
-        Assertions.assertTrue(liczbaPolWyszukiwania2 >= 1, "naStronieLogowaniaNieZnalezionoPolaWyszukiwania");
+        int noOfSearchFields2 = driver.findElements(By.id("search_query_top")).size();
+        Assertions.assertTrue(noOfSearchFields2 >= 1, "naStronieLogowaniaNieZnalezionoPolaWyszukiwania");
     }
 
     // Zad 4.
@@ -100,8 +99,8 @@ public class projektKoncowy {
         driver.findElement(By.id("center_column")).findElement(By.className("product-name")).click();
         String productName = driver.findElement(By.cssSelector(".pb-center-column > h1")).getText();
         driver.findElement(By.cssSelector("#add_to_cart > button > span")).click();
-        String potwierdzenie = (driver.findElement(By.xpath("//*[@id='layer_cart']/div[1]/div[1]/h2")).getAttribute("textContent"));
-        Assertions.assertEquals("Product successfully added to your shopping cart", potwierdzenie.trim());
+        String confirmation = (driver.findElement(By.xpath("//*[@id='layer_cart']/div[1]/div[1]/h2")).getAttribute("textContent"));
+        Assertions.assertEquals("Product successfully added to your shopping cart", confirmation.trim());
         Wait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
         wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//*[@id='layer_cart']//a")));
         driver.findElement(By.xpath("//*[@id='layer_cart']//a")).click();
