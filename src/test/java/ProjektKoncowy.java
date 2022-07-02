@@ -1,16 +1,34 @@
 import org.junit.jupiter.api.*;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 
 import java.time.Duration;
 
 import org.junit.jupiter.api.Assertions;
+import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Wait;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-public class projektKoncowy {
+public class ProjektKoncowy {
+
+    @FindBy(className = "login")
+    private WebElement loginButton;
+    @FindBy(id = "passwd")
+    private WebElement passwordInput;
+    @FindBy(id = "email")
+    private WebElement loginInput;
+
+    @FindBy(id = "SubmitLogin")
+    private WebElement signInButton;
+
+    public ProjektKoncowy() {
+        PageFactory.initElements(driver,this);
+    }
+
     static WebDriver driver = new ChromeDriver();
     @BeforeAll
     static void prepareBrowser() {
@@ -33,10 +51,10 @@ public class projektKoncowy {
     //Zrefaktoruj logowanie. Utwórz metodę pomocniczą login(), która przymuje dwa parametry: login i hasło.
     //Użyj jej w teście sprawdzającym logowanie.
     void logIn(String login, String password) {
-        driver.findElement(By.className("login")).click();
-        driver.findElement(By.id("email")).sendKeys(login);
-        driver.findElement(By.id("passwd")).sendKeys(password);
-        driver.findElement(By.id("SubmitLogin")).click();
+        loginButton.click();
+        loginInput.sendKeys(login);
+        passwordInput.sendKeys(password);
+        signInButton.click();
     }
 
     //Zad 1.
