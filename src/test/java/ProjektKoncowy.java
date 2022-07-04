@@ -7,6 +7,7 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import java.time.Duration;
 
 import org.junit.jupiter.api.Assertions;
+import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -14,21 +15,29 @@ import org.openqa.selenium.support.ui.Wait;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class ProjektKoncowy {
-
     @FindBy(className = "login")
     private WebElement loginButton;
     @FindBy(id = "passwd")
     private WebElement passwordInput;
     @FindBy(id = "email")
     private WebElement loginInput;
-
     @FindBy(id = "SubmitLogin")
     private WebElement signInButton;
+    @FindBy(css = "#contact-link > a")
+    private WebElement contactButton;
+
+    String login1 = "test_alicja@email.com";
+    String haslo1 = "haslo123";
+    String emailAddressRequired = "An email address required.";
+    String passwordRequired = "Password is required.";
+    String contactPageText = "SEND A MESSAGE";
+    String homePageAddress = "http://automationpractice.com/index.php";
+    String addedToCartConfirmation = "Product successfully added to your shopping cart";
+    String emptyCartConfirmation = "Your shopping cart is empty.";
 
     public ProjektKoncowy() {
         PageFactory.initElements(driver,this);
     }
-
     static WebDriver driver = new ChromeDriver();
     @BeforeAll
     static void prepareBrowser() {
@@ -62,8 +71,8 @@ public class ProjektKoncowy {
     // gdy przy próbie logowania nie podano loginu.
     @Test
     void logInWithoutUsername() {
-        logIn("", "haslo123");
-        Assertions.assertEquals("An email address required.",
+        logIn("", haslo1);
+        Assertions.assertEquals(emailAddressRequired,
                 driver.findElement(By.cssSelector(".alert.alert-danger > ol > li")).getText());
     }
 
@@ -72,8 +81,8 @@ public class ProjektKoncowy {
     // gdy przy próbie logowania nie podano hasła.
     @Test
     void logInWithoutPassword() {
-        logIn("test_alicja@email.com", "");
-        Assertions.assertEquals("Password is required.",
+        logIn(login1, "");
+        Assertions.assertEquals(passwordRequired,
                 driver.findElement(By.cssSelector(".alert.alert-danger > ol > li")).getText());
     }
 
@@ -95,8 +104,8 @@ public class ProjektKoncowy {
     // Napisz test sprawdzający przejście ze strony głównej do strony ”Kontakt”
     @Test
     void fromHomePageToContactPage() {
-        driver.findElement(By.cssSelector("#contact-link > a")).click();
-        Assertions.assertEquals("SEND A MESSAGE",
+        contactButton.click();
+        Assertions.assertEquals(contactPageText,
                 driver.findElement(By.cssSelector("#center_column > form > fieldset > h3")).getText());
     }
 
@@ -107,7 +116,7 @@ public class ProjektKoncowy {
         driver.get("http://automationpractice.com/index.php?controller=authentication&back=my-account");
         driver.findElement(By.className("logo")).click();
         String pageAddress = driver.getCurrentUrl();
-        Assertions.assertEquals("http://automationpractice.com/index.php", pageAddress);
+        Assertions.assertEquals(homePageAddress, pageAddress);
     }
 
     //Zad 6.
@@ -118,7 +127,7 @@ public class ProjektKoncowy {
         String productName = driver.findElement(By.cssSelector(".pb-center-column > h1")).getText();
         driver.findElement(By.cssSelector("#add_to_cart > button > span")).click();
         String confirmation = (driver.findElement(By.xpath("//*[@id='layer_cart']/div[1]/div[1]/h2")).getAttribute("textContent"));
-        Assertions.assertEquals("Product successfully added to your shopping cart", confirmation.trim());
+        Assertions.assertEquals(addedToCartConfirmation, confirmation.trim());
         Wait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
         wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//*[@id='layer_cart']//a")));
         driver.findElement(By.xpath("//*[@id='layer_cart']//a")).click();
@@ -136,7 +145,7 @@ public class ProjektKoncowy {
         wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//*[@id='layer_cart']//a")));
         driver.findElement(By.xpath("//*[@id='layer_cart']//a")).click();
         driver.findElement(By.cssSelector(".cart_quantity_delete > i")).click();
-        Assertions.assertEquals("Your shopping cart is empty.",
+        Assertions.assertEquals(emptyCartConfirmation,
                 driver.findElement(By.cssSelector("#center_column > p")).getAttribute("textContent"));
     }
 }
